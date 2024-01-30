@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Registration.Models.Users>
+
+@{
+    Layout = null;
+}
+<h4>Users</h4>
+<hr />
+ 
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddMultiple">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="table-responsive">
+                    <table id="tblUsers" class="table table-striped" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>User Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Users Us in Model)
+                            {
+                                <tr>
+                                    <td>@Us.EmailID</td>
+                                    <td>@Us.Password</td>
+                                    <td>@Us.UserType</td>
+                                    <td><input type="button" value="Remove" /></td>
+                                </tr>
+                            }
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td><input type="text" id="txtemail" /></td>
+                                <td><input type="text" id="txtpassword" /></td>
+                                <td><input type="text" id="txttype" /></td>
+                                <td><input type="button" id="btnAdd" value="Add" /></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+ 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+                        <script type="text/javascript">
+                            $("body").on("click", "#btnAdd", function () {
+
+        var txtEmail = $("#txtemail");
+        var txtPassword = $("#txtpassword");
+        var txtType = $("#txttype");
+
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblUsers > TBODY")[0];
+
+        //Add Row.
+        var row = tBody.insertRow(-1);
+        //Add email cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtEmail.val());
+        //add Password Cell
+        cell = $(row.insertCell(-1));
+        cell.html(txtPassword.val());
+        //add Type
+        cell = $(row.insertCell(-1));
+        cell.html(txtType.val());
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+
+                                alert("Hellow Body Click");
+
+                            });
+                           
+
+                        </script>

@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Registration.Models.Users>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.js" integrity="sha512-F49kv+wpQXPPk83WZgrqcw/A72douvETfmyZJ1tRELBVhDEm1aXH1FOUDjP0KJzgJKZY+w3RGeOiIBQq3tddqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script> 
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyYq5Sb5FfBv3CI7pO9dI9o12ID1j7fMl" crossorigin="anonymous">
+
+<h3 class="h3">Index</h3>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<p>
+    <a onclick="showInPopup('@Url.Action("Add","Users",null,Context.Request.Scheme)','New User')" class="btn btn-success text-white"><i class="fas fa-random"></i> New User</a>
+
+</p>
+
+<button id="btnAdd">Add</button>
+<div class="table-responsive">
+<table class="table" id="View-all">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserType)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailVerified)
+            </th>
+             
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailID)
+            </td>
+            <td >
+                @Html.LabelFor(modelItem => item.Password,"****")
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserType)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailVerified)
+            </td>
+                
+            <td>
+                    <a onclick="showInPopup('@Url.Action("Add","Users",new {UserID=@item.UserID.ToString()},Context.Request.Scheme)','Update User')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                  
+                <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ 

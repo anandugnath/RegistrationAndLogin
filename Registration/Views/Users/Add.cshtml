@@ -1,0 +1,69 @@
+﻿@model Registration.Models.Users
+@{
+    Layout = null;
+}
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+<script src="c:\anandu\git public\registrationandlogin\registration\wwwroot\js\site.js"></script>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Add" asp-route-id="@Model.UserID" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                <label asp-for="UserID" class="control-label"></label>
+                <input asp-for="UserID" class="form-control" />
+                <span asp-validation-for="UserID" class="text-danger"></span>
+                 
+            </div>
+            <div class="row">
+            <div class="form-group">
+                <label asp-for="EmailID" class="control-label"></label>
+                <input asp-for="EmailID" class="form-control" />
+                <span asp-validation-for="EmailID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserType" class="control-label"></label>
+                <select asp-for="UserType" class="form-control" asp-items="@(new SelectList(ViewBag.Usertypes,"Value", "Text"))" >
+                    <option value="">Select an option</option>
+                    </select>
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+
+            <br />
+            <div class="row">
+            <div class="col-md-6">
+             
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            </div>
+            <div class="col-md-6">
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EmailVerified" readonly="readonly" /> @Html.DisplayNameFor(model => model.EmailVerified)
+                </label>
+            </div>
+            </div>
+            </div>
+
+
+            <div class="form-group d-flex justify-content-end" style="padding-top:25px;">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

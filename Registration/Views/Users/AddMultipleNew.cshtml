@@ -1,0 +1,206 @@
+﻿@model IEnumerable<Registration.Models.Users>
+
+@{
+    ViewData["Title"] = "AddMultipleNew";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-GLhlTQ8iKlTkBrDDODKYRpqtr5BNYYjLr+9PJIX9adGEtr5gUKjS6jHCA2M5E78"
+          crossorigin="anonymous" />
+</head>
+<body>
+
+    <div class="container">
+        <h4>Add Multiple Users</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="AddMultiple">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="table-responsive">
+                        <table id="tblUsers" class="table table-striped" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>User Type</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Users Us in Model)
+                                {
+                                    <tr>
+                                        <td>@Us.EmailID</td>
+                                        <td>@Us.Password</td>
+                                        <td>@Us.UserType</td>
+                                        <td><input type="button" value="Remove" /></td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td><input type="text" id="txtemail" class="form-control" /></td>
+                                    <td><input type="text" id="txtpassword" class="form-control" /></td>
+                                    <td><input type="text" id="txttype" class="form-control" /></td>
+                                    <td><input type="button" id="btnAdd" value="Add" class="btn btn-primary" /></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <input type="button" id="btnSave" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.3/dist/umd/popper.min.js"
+            integrity="sha384-eMNCOHvh1S8p1ptDBKgAdkNLcZF4QgOen8xlmRqfFO9VAtTJKhxEKxol+dp5RiB"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wyqg5Ic6Mbz5nFsd5lZ6I9PmPbhepP7L2"
+            crossorigin="anonymous"></script>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script type="text/javascript">
+        $("body").on("click", "#btnAdd", function () {
+
+            var txtEmail = $("#txtemail");
+            var txtPassword = $("#txtpassword");
+            var txtType = $("#txttype");
+            txtPassword.attr("type", "password" );
+
+            console.log(txtEmail.val());
+            console.log(txtPassword.val());
+            console.log(txtType.val());
+           
+
+            if (txtEmail.val() === '' || txtPassword.val() === '' || txtType.val() === '') {
+                alert("Email and Password are required.");
+                return;
+            }
+            //Get the reference of the Table's TBODY element.
+            var tBody = $("#tblUsers > TBODY")[0];
+
+            //Add Row.
+            var row = tBody.insertRow(-1);
+            //Add email cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtEmail.val());
+            //add Password Cell
+            cell = $(row.insertCell(-1));
+            cell.html(txtPassword.val());
+            //add Type
+            cell = $(row.insertCell(-1));
+            cell.html(txtType.val());
+
+            //Add Button cell.
+            cell = $(row.insertCell(-1));
+            var btnRemove = $("<input />");
+            btnRemove.attr("type", "button");
+            btnRemove.attr("onclick", "Remove(this);");
+            btnRemove.val("Remove");
+            cell.append(btnRemove);
+
+            
+            txtEmail.val('');
+            txtPassword.val('');
+            txtType.val('');
+           
+
+        });
+
+        function Remove(button)
+        { 
+            alert("Remove Click");
+
+            var row = $(button).closest("TR");
+            var name = $("TD", row).eq(0).html();
+           
+            if (confirm("Do you want to delete: " + name)) {
+                //Get the reference of the Table.
+                var table = $("#tblUsers")[0];
+
+                //Delete the Table row using it's Index.
+                table.deleteRow(row[0].rowIndex);
+            }
+        };
+
+
+        $("body").on("click", "#btnSave", function () {
+            //Loop through the Table rows and build a JSON array.
+            var Users = new Array();
+            $("#tblUsers TBODY TR").each(function () {
+                var row = $(this);
+                var User = {};
+                User.Email = row.find("TD").eq(0).html();
+                User.Password = row.find("TD").eq(1).html();
+                User.UserType = row.find("TD").eq(2).html();
+                User.RegistrationType = "B";
+                alert(User.UserType);
+                User.IsActive = true;
+                User.EmailVerified = false;
+                Users.push(User);
+               
+            });
+            
+            console.log(Users);
+            
+             $.ajax({
+        type: "POST",
+        url: "/Users/InsertBulkUsers",
+        data: JSON.stringify(Users),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (r) {
+            alert(r + " record(s) inserted.");
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.error(xhr.responseText);
+        }
+
+            });
+
+
+        });
+
+
+
+      
+
+
+
+    </script>
+
+</body>
+</html>
