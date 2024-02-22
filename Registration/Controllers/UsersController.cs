@@ -20,12 +20,22 @@ namespace Registration.Controllers
             _context = context;
         }
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        
+        public UsersController(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         // GET: Users
         public async Task<IActionResult> Index()
         {
-          
+            var userId = _httpContextAccessor.HttpContext.Session.GetInt32("UserID");
+            if (userId == null)
+            {
+                
+                return RedirectToAction("Login", "Users");
+            }
 
             return View(await _context.Users.ToListAsync());
               //return _context.Users != null ? 
@@ -56,7 +66,33 @@ namespace Registration.Controllers
         {
             return View();
         }
+        public IActionResult Login()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public JsonResult LoginCheck( [FromBody]Users obj)
+        {
+          
+
+            if (obj.EmailID!=null && obj.Password!=null)
+            {
+                var a=_context.Users.Where(t=> t.EmailID==obj.EmailID && t.Password==obj.Password).FirstOrDefault();
+            if(a!=null)
+                {
+                    HttpContext.Session.SetInt32("UserID", a.UserID);
+                    HttpContext.Session.SetString("EmailID", a.EmailID);
+
+                    string redirectUrl = Url.Action("Index", "Home");
+
+                    return Json(new { isValid = true, redirectUrl });
+                   
+                }
+
+            }
+            return Json(new { isValid = false });
+        }
         public async Task<IActionResult> AddMultiple(int UserID)
         {
             List<SelectListItem> UserType = new List<SelectListItem>()
@@ -108,17 +144,21 @@ namespace Registration.Controllers
         }
 
 
-        public JsonResult InsertBulkUsers(List<Users> Users)
+        public JsonResult InsertBulkUsers([FromBody]List<Users> Users)
         {
+            int Cnt = 0;
             foreach(Users Usr in Users)
             {
+                Cnt++;
+                Usr.AddedDate = DateTime.Now;
+
 
                 _context.Add(Usr);
                 _context.SaveChanges();
 
             }
          var id=   _context.SaveChanges();
-            return Json(id);
+            return Json(Cnt);
         }
         public async Task< IActionResult> Add(int UserID)
         {

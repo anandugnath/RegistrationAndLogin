@@ -163,7 +163,7 @@
             $("#tblUsers TBODY TR").each(function () {
                 var row = $(this);
                 var User = {};
-                User.Email = row.find("TD").eq(0).html();
+                User.EmailID = row.find("TD").eq(0).html();
                 User.Password = row.find("TD").eq(1).html();
                 User.UserType = row.find("TD").eq(2).html();
                 User.RegistrationType = "B";
@@ -184,6 +184,7 @@
         dataType: "json",
         success: function (r) {
             alert(r + " record(s) inserted.");
+                    window.location.href = "/Users/Index";
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error(xhr.responseText);

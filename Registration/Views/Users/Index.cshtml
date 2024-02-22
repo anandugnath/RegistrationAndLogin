@@ -75,10 +75,20 @@
                 
             <td>
                     <a onclick="showInPopup('@Url.Action("Add","Users",new {UserID=@item.UserID.ToString()},Context.Request.Scheme)','Update User')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                  
+                  |
+                    <a onclick="showInPopup('@Url.Action("Details","Users",new {id=@item.UserID.ToString()},Context.Request.Scheme)','User Details')" class="btn btn-Success "><i class="fas fa-pencil-alt"></i> Details</a>
+                
+                          
                 <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a>
+                 n
+
             </td>
+            <td>
+                 
+               
+            </td>
+          
         </tr>
 }
     </tbody>
